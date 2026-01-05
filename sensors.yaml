@@ -1,4 +1,3 @@
-
 # NOTE: Legacy template sensors removed (platform: template) to avoid deprecation in HA 2026.6.
 # These sensors were migrated to `/config/templates.yaml` under the modern `template:` integration.
 

@@ -67,9 +67,9 @@ alexa:
       exclude_entity_globs:
         - switch.*backlight*
   entity_config:
-      binary_sensor.0xa4c13836cd3a3a54_contact:
-        name: Sensor Portón
-        description: Sensor de apertura del portón
+    binary_sensor.0xa4c13836cd3a3a54_contact:
+      name: Sensor Portón
+      description: Sensor de apertura del portón
 
 utility_meter:
   consumo_gas_diario:
@@ -82,4 +82,4 @@ utility_meter:
     source: sensor.consumo_de_gas
     cycle: monthly
 
-        - sensor.0xa4c1385656504f9f_temperature
+      - sensor.0xa4c1385656504f9f_temperature
