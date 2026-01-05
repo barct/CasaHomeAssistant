@@ -98,3 +98,22 @@
         {{ state_attr('weather.casa_anisacate','temperature') | float
            - states('sensor.0xa4c1385656504f9f_temperature') | float }}
 
+- cover:
+    - name: "Portón"
+      unique_id: porton_virtual_01
+      device_class: garage
+      state: >
+        {{ is_state('binary_sensor.0xa4c13836cd3a3a54_contact', 'on') }}
+      icon: >
+        {% if is_state('binary_sensor.0xa4c13836cd3a3a54_contact', 'on') %}
+          mdi:garage-open
+        {% else %}
+          mdi:garage
+        {% endif %}
+      open_cover:
+        - action: script.abrir_porton
+      close_cover:
+        - action: script.cerrar_porton
+          data:
+            entity_id: scene.abrir_porton
+
