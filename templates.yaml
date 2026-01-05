@@ -73,3 +73,28 @@
       state: >
         {{ states('input_number.temp_today_min') | float }}
 
+- sensor:
+    - name: "Próxima Temperatura (1h)"
+      unique_id: living_temperature_next
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: >
+        {{ states('sensor.0xa4c1385656504f9f_temperature') | float
+           + states('sensor.caldera_variacion_temp') | float }}
+
+    - name: "Próxima Temperatura Ext.(1h)"
+      unique_id: outside_temperature_next
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: >
+        {{ state_attr('weather.casa_anisacate','temperature') | float
+           + states('sensor.gradiente_temperatura_exterior') | float }}
+
+    - name: "Diferencia de Temperatura"
+      unique_id: temperature_diff
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: >
+        {{ state_attr('weather.casa_anisacate','temperature') | float
+           - states('sensor.0xa4c1385656504f9f_temperature') | float }}
+

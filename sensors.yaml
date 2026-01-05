@@ -1,18 +1,4 @@
-- platform: template
-  sensors:
-    living_temperature_next:
-      friendly_name: "Próxima Temperatura (1h)"
-      unit_of_measurement: "°C"
-      device_class: temperature
-      value_template: "{{ states('sensor.0xa4c1385656504f9f_temperature')|float + states('sensor.caldera_variacion_temp')|float }}"
 
-    outside_temperature_next:
-      friendly_name: "Próxima Temperatura Ext.(1h)"
-      unit_of_measurement: "°C"
-      value_template: "{{ state_attr('weather.casa_anisacate','temperature') |float + states('sensor.gradiente_temperatura_exterior')|float }}"
-      device_class: temperature
+# NOTE: Legacy template sensors removed (platform: template) to avoid deprecation in HA 2026.6.
+# These sensors were migrated to `/config/templates.yaml` under the modern `template:` integration.
 
-    temperature_diff:
-      friendly_name: "Diferencia de Temperatura"
-      unit_of_measurement: "°C"
-      value_template: "{{ state_attr('weather.casa_anisacate','temperature')|float - states('sensor.0xa4c1385656504f9f_temperature')|float }}"
