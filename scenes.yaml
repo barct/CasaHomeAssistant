@@ -1,0 +1,318 @@
+- id: '1741830049464'
+  name: A dormir
+  entities:
+    media_player.samsung_living:
+      source_list:
+      - TV
+      - HDMI
+      - AccuWeather - Weather for Life
+      - Cine.ar Play
+      - Claro video
+      - Disney+
+      - FOX
+      - Facebook Watch
+      - HBO GO
+      - Max
+      - Movistar TV
+      - Netflix
+      - Opciones de privacidad
+      - Plex - Free Movies ＆ TV
+      - Prime Video
+      - Spotify - Music and Podcasts
+      - Star+
+      - Steam Link
+      - TV Cast - Screen Mirroring
+      - The Dream VR
+      - TuneIn
+      - Web Browser
+      - YouTube
+      - YouTube Kids
+      - e-Manual
+      device_class: tv
+      friendly_name: Pantalla Living
+      supported_features: 24509
+      state: 'off'
+    switch.punto_frente_l1:
+      friendly_name: Luz Frente
+      state: 'off'
+    switch.punto_frente_l2:
+      friendly_name: Luz Mural 2
+      state: 'off'
+    switch.punto_living_center:
+      friendly_name: Luz Principal
+      state: 'off'
+    switch.punto_living_left:
+      friendly_name: Luz Mural 1
+      state: 'off'
+    switch.punto_living_right:
+      friendly_name: Luz Pasillo
+      state: 'off'
+    switch.punto_puerta_l1:
+      friendly_name: Luz Entrada Cocina
+      state: 'off'
+    switch.punto_puerta_l2:
+      friendly_name: Luz Patio
+      state: 'off'
+    switch.punto_ventana_center:
+      friendly_name: Luz Ventana
+      state: 'off'
+    switch.punto_ventana_left:
+      friendly_name: Luz Cochera
+      state: 'off'
+    switch.punto_ventana_right:
+      friendly_name: Luz Tv
+      state: 'off'
+    switch.0xe0798dfffeb73b00:
+      friendly_name: Luz Fondo
+      state: 'off'
+    switch.0xa4c1383719d7951f_l1:
+      friendly_name: Luz Pasillo Habitaciones
+      state: 'off'
+    switch.0xa4c1383719d7951f_l2:
+      friendly_name: Luz Patio Chico
+      state: 'off'
+    switch.0xa4c1389ed679372a:
+      friendly_name: Luz Cantero
+      state: 'off'
+    switch.0xa4c13892fa4d84a1:
+      friendly_name: Luz Patio Arbol
+      state: 'off'
+    switch.0xa4c138a8a0c86aee_center:
+      friendly_name: Luz Mesa
+      state: 'off'
+    switch.0xa4c138a8a0c86aee_right:
+      friendly_name: Luz Cocina Principal
+      state: 'off'
+    switch.switch_escalera_l1:
+      friendly_name: Luz Oficina Superior
+      state: 'off'
+    switch.switch_escalera_l2:
+      friendly_name: Luz Escalera
+      state: 'off'
+  icon: mdi:bed
+  metadata:
+    media_player.samsung_living:
+      entity_only: true
+    switch.0xe0798dfffeb73b00:
+      entity_only: true
+    switch.0xa4c1389ed679372a:
+      entity_only: true
+    switch.0xa4c13892fa4d84a1:
+      entity_only: true
+    switch.0xa4c138a8a0c86aee_center:
+      entity_only: true
+    switch.0xa4c138a8a0c86aee_right:
+      entity_only: true
+- id: '1742774144684'
+  name: A comer
+  entities:
+    switch.punto_living_center:
+      friendly_name: Luz Principal
+      state: 'on'
+    switch.punto_ventana_center:
+      friendly_name: Luz Ventana
+      state: 'on'
+    switch.punto_living_right:
+      friendly_name: Luz Pasillo
+      state: 'on'
+    switch.punto_ventana_right:
+      friendly_name: Luz Tv
+      state: 'on'
+    switch.0xa4c138b2a3c6fde5:
+      friendly_name: Luz Mesada
+      state: 'on'
+  metadata:
+    switch.punto_living_center:
+      entity_only: true
+    switch.punto_ventana_center:
+      entity_only: true
+    switch.punto_living_right:
+      entity_only: true
+    switch.punto_ventana_right:
+      entity_only: true
+    switch.0xa4c138b2a3c6fde5:
+      entity_only: true
+  icon: mdi:food-turkey
+- id: '1743674869964'
+  name: A Desayunar
+  entities:
+    switch.0xa4c138a8a0c86aee_center:
+      friendly_name: Luz Mesa
+      state: 'on'
+    switch.punto_puerta_l2:
+      friendly_name: Luz Patio
+      state: 'on'
+    switch.0xa4c138b2a3c6fde5:
+      friendly_name: Luz Mesada
+      state: 'on'
+    switch.0xa4c138a8a0c86aee_right:
+      friendly_name: Luz Cocina Principal
+      state: 'off'
+    switch.punto_puerta_l1:
+      friendly_name: Luz Entrada Cocina
+      state: 'off'
+    switch.punto_living_center:
+      friendly_name: Luz Principal
+      state: 'off'
+    switch.punto_living_left:
+      friendly_name: Luz Mural 1
+      state: 'off'
+    switch.punto_living_right:
+      friendly_name: Luz Pasillo
+      state: 'on'
+  metadata:
+    switch.0xa4c138a8a0c86aee_center:
+      entity_only: true
+    switch.punto_puerta_l2:
+      entity_only: true
+    switch.0xa4c138b2a3c6fde5:
+      entity_only: true
+- id: '1744024293203'
+  name: Soft
+  entities:
+    switch.0xa4c138a8a0c86aee_center:
+      friendly_name: Luz Mesa
+      state: 'off'
+    switch.0xa4c138a8a0c86aee_right:
+      friendly_name: Luz Cocina Principal
+      state: 'off'
+    switch.punto_living_center:
+      friendly_name: Luz Principal
+      state: 'off'
+    switch.punto_living_left:
+      friendly_name: Luz Mural 1
+      state: 'on'
+    switch.punto_living_right:
+      friendly_name: Luz Pasillo
+      state: 'off'
+    switch.0xa4c1389ed679372a:
+      friendly_name: Luz Cantero
+      state: 'on'
+    switch.punto_ventana_center:
+      friendly_name: Luz Ventana
+      state: 'on'
+    switch.punto_ventana_left:
+      friendly_name: Luz Cochera
+      state: 'off'
+    switch.punto_ventana_right:
+      friendly_name: Luz Tv
+      state: 'off'
+  metadata: {}
+  icon: mdi:bed-queen-outline
+- id: '1744892904180'
+  name: Apagar Luces
+  entities:
+    media_player.samsung_living:
+      source_list:
+      - TV
+      - HDMI
+      - AccuWeather - Weather for Life
+      - Cine.ar Play
+      - Claro video
+      - Disney+
+      - FOX
+      - Facebook Watch
+      - HBO GO
+      - Max
+      - Movistar TV
+      - Netflix
+      - Opciones de privacidad
+      - Plex - Free Movies ＆ TV
+      - Prime Video
+      - Spotify - Music and Podcasts
+      - Star+
+      - Steam Link
+      - TV Cast - Screen Mirroring
+      - The Dream VR
+      - TuneIn
+      - Web Browser
+      - YouTube
+      - YouTube Kids
+      - e-Manual
+      device_class: tv
+      friendly_name: Pantalla Living
+      supported_features: 24509
+      state: 'off'
+    switch.punto_frente_l1:
+      friendly_name: Luz Frente
+      state: 'off'
+    switch.punto_frente_l2:
+      friendly_name: Luz Mural 2
+      state: 'off'
+    switch.punto_living_center:
+      friendly_name: Luz Principal
+      state: 'off'
+    switch.punto_living_left:
+      friendly_name: Luz Mural 1
+      state: 'off'
+    switch.punto_living_right:
+      friendly_name: Luz Pasillo
+      state: 'off'
+    switch.punto_puerta_l1:
+      friendly_name: Luz Entrada Cocina
+      state: 'off'
+    switch.punto_puerta_l2:
+      friendly_name: Luz Patio
+      state: 'off'
+    switch.punto_ventana_center:
+      friendly_name: Luz Ventana
+      state: 'off'
+    switch.punto_ventana_left:
+      friendly_name: Luz Cochera
+      state: 'off'
+    switch.punto_ventana_right:
+      friendly_name: Luz Tv
+      state: 'off'
+    switch.0xe0798dfffeb73b00:
+      friendly_name: Luz Fondo
+      state: 'off'
+    switch.0xa4c1383719d7951f_l1:
+      friendly_name: Luz Pasillo Habitaciones
+      state: 'off'
+    switch.0xa4c1383719d7951f_l2:
+      friendly_name: Luz Patio Chico
+      state: 'off'
+    switch.0xa4c1389ed679372a:
+      friendly_name: Luz Cantero
+      state: 'off'
+    switch.0xa4c13892fa4d84a1:
+      friendly_name: Luz Patio Arbol
+      state: 'off'
+    switch.0xa4c138a8a0c86aee_center:
+      friendly_name: Luz Mesa
+      state: 'off'
+    switch.0xa4c138a8a0c86aee_right:
+      friendly_name: Luz Cocina Principal
+      state: 'off'
+    switch.switch_escalera_l1:
+      friendly_name: Luz Oficina Superior
+      state: 'off'
+    switch.switch_escalera_l2:
+      friendly_name: Luz Escalera
+      state: 'off'
+    switch.switch_hab_felipe_l1:
+      friendly_name: Luz Habitación Felipe
+      state: 'off'
+    switch.switch_hab_felipe_l2:
+      friendly_name: Luz Escritorio Felipe
+      state: 'off'
+    switch.switch_hab_padres_l1:
+      friendly_name: Luz Habitación Padres Mural
+      state: 'off'
+    switch.switch_hab_padres_l2:
+      friendly_name: Luz Habitación Padres Principal
+      state: 'off'
+  icon: mdi:lightbulb-group-off-outline
+  metadata:
+    media_player.samsung_living:
+      entity_only: true
+    switch.0xe0798dfffeb73b00:
+      entity_only: true
+    switch.0xa4c1389ed679372a:
+      entity_only: true
+    switch.0xa4c13892fa4d84a1:
+      entity_only: true
+    switch.0xa4c138a8a0c86aee_center:
+      entity_only: true
+    switch.0xa4c138a8a0c86aee_right:
+      entity_only: true

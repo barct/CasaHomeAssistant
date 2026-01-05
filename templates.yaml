@@ -1,0 +1,75 @@
+- sensor:
+    - name: "Consumo de Gas m³"
+      unique_id: "gas_acumulado_para_energy"
+      unit_of_measurement: "m³"
+      device_class: gas
+      state_class: total_increasing
+      state: >
+        {% set tiempo = states('sensor.tiempo_uso_caldera') | float(0) %}
+        {% set consumo = states('input_number.consumo_de_la_caldera') | float(0) %}
+        {{ tiempo * consumo * 0.546 }}
+- sensor:
+    - name: "Consumo de Gas kg"
+      unique_id: "gas_acumulado_para_energy_kg"
+      unit_of_measurement: "kg"
+      device_class: gas
+      state_class: total_increasing
+      state: >
+        {% set tiempo = states('sensor.tiempo_uso_caldera') | float(0) %}
+        {% set consumo = states('input_number.consumo_de_la_caldera') | float(0) %}
+        {{ tiempo * consumo }}
+- sensor:
+    - name: "Consumo de Gas %"
+      unique_id: "gas_acumulado_para_energy_porc"
+      unit_of_measurement: "%"
+      device_class: gas
+      state_class: total_increasing
+      state: >
+        {% set tiempo = states('sensor.tiempo_uso_caldera') | float(0) %}
+        {% set consumo = states('input_number.consumo_de_la_caldera') | float(0) %}
+        {{ (tiempo * consumo) / 4.0 }}
+
+- sensor:
+    - name: "Nivel Estimado de Gas"
+      unique_id: "gas_nivel_estimado"
+      unit_of_measurement: "%"
+      device_class: gas
+      state_class: total_increasing
+      state: >
+        {% set tiempo = states('input_number.tiempo_de_uso_caldera_corregido') | float(0) %}
+        {% set consumo = states('input_number.consumo_de_la_caldera') | float(0) %}
+        {{ (100-(tiempo * consumo) / 4.0) }}
+
+- sensor:
+    - name: "Consumo Estimado de Caldera"
+      unique_id: "caldera_consumo_estimado"
+      unit_of_measurement: "kg/h"
+      device_class: gas
+      state_class: total_increasing
+      state: >
+        {% set tiempo = states('sensor.tiempo_uso_caldera_hasta_cambio_nivel') | float(0) %}
+        {% set consumo = states('input_number.consumo_de_la_caldera') | float(0) %}
+        {% set nivel = states('counter.nivel_de_gas') | float(0) %}
+        {{ (400-(nivel * 4)) / tiempo }}
+
+- sensor:
+    - name: "Clima Casa Máxima diaria"
+      unique_id: clima_casa_maxima_diaria
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      availability: >
+        {{ states('input_number.temp_today_max') not in ['unknown','unavailable','none','','nan'] }}
+      state: >
+        {{ states('input_number.temp_today_max') | float }}
+
+    - name: "Clima Casa Mínima diaria"
+      unique_id: clima_casa_minima_diaria
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      availability: >
+        {{ states('input_number.temp_today_min') not in ['unknown','unavailable','none','','nan'] }}
+      state: >
+        {{ states('input_number.temp_today_min') | float }}
+

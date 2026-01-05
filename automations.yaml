@@ -1,0 +1,549 @@
+- id: '1740000141771'
+  alias: Al cargar movil no molestar
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.sm_a245m_battery_state
+    from:
+    to: charging
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  conditions:
+  - condition: time
+    after: '20:00:00'
+    before: 06:00:00
+  actions:
+  - data:
+      message: command_dnd
+      data:
+        command: priority_only
+    action: notify.mobile_app_sm_a245m
+  mode: single
+- id: '1740197073581'
+  alias: Al desenchufar movil quitar dnd
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.sm_a245m_battery_state
+    to: discharging
+    from:
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  conditions:
+  - condition: time
+    after: 05:00:00
+    before: '12:00:00'
+  actions:
+  - data:
+      message: command_dnd
+      data:
+        command: 'off'
+    action: notify.mobile_app_sm_a245m
+  mode: single
+- id: '1741808031787'
+  alias: Luz cochera al llegar
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - person.fernando
+    from: not_home
+    to: home
+  - trigger: state
+    entity_id:
+    - person.sara
+    from: not_home
+    to: home
+  conditions:
+  - condition: sun
+    after: sunset
+    before: sunrise
+  actions:
+  - variables:
+      estado_inicial: '{{ states(''switch.punto_ventana_left'') }}'
+  - type: turn_on
+    device_id: 655f79950a950fd07c8fc82abb445dfd
+    entity_id: a775a3d3314a46449468bf55e6fb8795
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - condition: template
+    value_template: '{{ estado_inicial == ''off'' }}'
+  - type: turn_off
+    device_id: 655f79950a950fd07c8fc82abb445dfd
+    entity_id: a775a3d3314a46449468bf55e6fb8795
+    domain: switch
+  mode: single
+- id: '1741908211702'
+  alias: Encender Luces al Anochecer
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions: []
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.punto_frente_l1
+      - switch.punto_puerta_l2
+      - switch.0xa4c138a50efeb6f3
+      - switch.0xa4c1383719d7951f_l2
+      - switch.0xe0798dfffeb73b00
+      - switch.0xa4c13892fa4d84a1
+  mode: single
+- id: '1741908345270'
+  alias: Apagar luces antes de dormir
+  description: ''
+  triggers:
+  - trigger: time
+    at: '22:30:00'
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.punto_frente_l1
+  mode: single
+- id: '1742602084817'
+  alias: Encender luz al abrir puerta
+  description: ''
+  triggers:
+  - type: opened
+    device_id: 68d46160eb71c85f13384c885c85f21c
+    entity_id: 6273010bf6175d09e29e7e6a5897b8e1
+    domain: binary_sensor
+    trigger: device
+  conditions:
+  - condition: sun
+    before: sunrise
+    after: sunset
+  actions:
+  - type: turn_on
+    device_id: c18f3b25fb8609beddc00f227a7dffe5
+    entity_id: f2279471a84abf638497822ea55a92aa
+    domain: switch
+  - type: turn_on
+    device_id: c18f3b25fb8609beddc00f227a7dffe5
+    entity_id: 06a13b88f16badb951da72afb85a4829
+    domain: switch
+  mode: single
+- id: '1742672226001'
+  alias: Apagar luces al amanecer
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: 0
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0xa4c138a50efeb6f3
+      - switch.punto_puerta_l2
+      - switch.punto_puerta_l1
+      device_id: 82e1f89e6158b523eed4fe14be176e92
+  mode: single
+- id: '1742773721917'
+  alias: Botón a Escena Dormir
+  description: ''
+  triggers:
+  - domain: mqtt
+    device_id: cb0cde51ef409ae4880a76dbb0b12ccc
+    type: action
+    subtype: 1_double
+    trigger: device
+  conditions: []
+  actions:
+  - action: script.secuencia_ir_a_dormir
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1742774326883'
+  alias: Botón a comer
+  description: ''
+  triggers:
+  - domain: mqtt
+    device_id: cb0cde51ef409ae4880a76dbb0b12ccc
+    type: action
+    subtype: 1_single
+    trigger: device
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.a_comer
+  mode: single
+- id: '1743550367026'
+  alias: Nueva automatización noti
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: script.prueba_alexa_noti
+    metadata: {}
+    data:
+      devices:
+      - 911dbcab64222c9bca6e2bc31bb5996c
+      title: hola
+      message: hola mundo
+      type: announce
+  mode: single
+- id: '1743595050219'
+  alias: Link On/Off Luz Mesada
+  description: ''
+  use_blueprint:
+    path: aderusha/link_multiple_devices.yaml
+    input:
+      linked_entities:
+      - switch.switch_mesada
+      - switch.0xa4c138a8a0c86aee_left
+- id: '1743725893334'
+  alias: Dar los buenos días
+  description: ''
+  triggers:
+  - type: occupied
+    device_id: e2742806696762a8470a6725d7300636
+    entity_id: 9be12616f4cdf81bfed64242b9423551
+    domain: binary_sensor
+    trigger: device
+  conditions:
+  - condition: time
+    after: 06:00:00
+    before: 08:00:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  actions:
+  - action: script.bueos_dias_de_alexa
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1744768107377'
+  alias: Setear Casa Durmiendo
+  description: ''
+  triggers:
+  - trigger: event
+    event_type: call_service
+    event_data:
+      domain: scene
+      service: turn_on
+      service_data:
+        entity_id: scene.a_dormir
+  conditions: []
+  actions:
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.casa_durmiendo
+  mode: single
+- id: '1744891388028'
+  alias: Botón a soft
+  description: ''
+  triggers:
+  - domain: mqtt
+    device_id: cb0cde51ef409ae4880a76dbb0b12ccc
+    type: action
+    subtype: 2_single
+    trigger: device
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.soft
+  mode: single
+- id: '1744892571222'
+  alias: Botón apagar luces
+  description: ''
+  triggers:
+  - domain: mqtt
+    device_id: cb0cde51ef409ae4880a76dbb0b12ccc
+    type: action
+    subtype: 1_hold
+    trigger: device
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.a_dormir_duplicar
+  mode: single
+- id: '1745273802409'
+  alias: Estado lógico de Ventanas Abiertas/Cerradas
+  description: ''
+  use_blueprint:
+    path: barct/ventanas.yaml
+    input:
+      sensor_exterior: sensor.sensor_exterior_temperature
+      sensor_interior: sensor.0xa4c1385656504f9f_temperature
+      temperatura_confort_max: 25
+      temperatura_confort_min: 21
+      estado_ventanas_booleano: input_boolean.estado_deseable_ventanas
+      estado_ventanas_texto: input_text.estado_deseable_de_ventanas
+      margen_diferencia: 0.8
+- id: '1747705401469'
+  alias: Encender calefacción a la Mañana
+  description: ''
+  triggers:
+  - trigger: time
+    at: 06:00:00
+  conditions:
+  - condition: numeric_state
+    entity_id: climate.ac_padres
+    attribute: current_temperature
+    below: 19
+  - condition: state
+    entity_id: input_select.rutina_diaria
+    state: Rutina Laboral - Clases
+  actions:
+  - action: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: 25
+    target:
+      entity_id:
+      - climate.ac_padres
+      - climate.aire_acondicionado_felipe
+      - climate.aire_acondicionado_galileo
+  - action: climate.set_hvac_mode
+    metadata: {}
+    data:
+      hvac_mode: heat
+    target:
+      entity_id:
+      - climate.ac_padres
+      - climate.aire_acondicionado_felipe
+      - climate.aire_acondicionado_galileo
+  - action: climate.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - climate.ac_padres
+      - climate.aire_acondicionado_galileo
+      - climate.aire_acondicionado_felipe
+  - delay:
+      hours: 0
+      minutes: 50
+      seconds: 0
+      milliseconds: 0
+  - action: climate.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - climate.ac_padres
+      - climate.aire_acondicionado_felipe
+      - climate.aire_acondicionado_galileo
+  mode: single
+- id: '1748033698006'
+  alias: Actualizar rutina actual al cambiar ayudante
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_boolean.ausente
+    - input_boolean.epoca_de_clases
+    - input_boolean.rutina_hogarena
+  conditions: []
+  actions:
+  - action: script.configurar_rutina_actual
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1748034967165'
+  alias: Configuracion Diaria de Rutinas
+  description: ''
+  triggers:
+  - trigger: time
+    at: 04:00:00
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.rutina_hogarena
+  - action: script.configurar_rutina_actual
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1748035159332'
+  alias: Excluyentes a Ayudante Hoy Rutina Hogareña
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_boolean.rutina_hogarena
+    from: 'off'
+    to: 'on'
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.ausente
+  mode: single
+- id: '1748038182084'
+  alias: Rutina - Encender Caldera al Mediodía
+  description: ''
+  triggers:
+  - trigger: time
+    at: input_datetime.caldera_hora_encendido
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: input_select.rutina_diaria
+      state: Ausente
+  - condition: template
+    value_template: '{{ states(''input_number.caldera_maxima_temperatura_exterior'')
+      | float > states(''input_number.temp_today_max'') | float }}
+
+      '
+  actions:
+  - action: climate.set_preset_mode
+    metadata: {}
+    data:
+      preset_mode: comfort
+    target:
+      entity_id: climate.termostato_caldera
+  - action: climate.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: e72ddf391d61baca81786cc613851969
+  mode: single
+- id: '1748044721142'
+  alias: Rutina - Apagar Caldera  a la Noche
+  description: ''
+  triggers:
+  - trigger: time
+    at: input_datetime.caldera_hora_apagado
+  conditions: []
+  actions:
+  - action: climate.set_preset_mode
+    metadata: {}
+    data:
+      preset_mode: sleep
+    target:
+      entity_id: climate.termostato_caldera
+  mode: single
+- id: '1749237190425'
+  alias: Recomendar Estado de Ventanas
+  description: ''
+  triggers:
+  - type: occupied
+    device_id: e2742806696762a8470a6725d7300636
+    entity_id: 9be12616f4cdf81bfed64242b9423551
+    domain: binary_sensor
+    trigger: device
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  - trigger: time_pattern
+    minutes: /20
+  conditions:
+  - condition: time
+    after: 08:00:00
+    before: '23:00:00'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_text.estado_deseable_de_ventanas
+        state: Abrir Ventanas
+      - type: is_not_open
+        condition: device
+        device_id: fbc05b6200ed8cef43577618233dea93
+        entity_id: 3072835d2a9d208031a77b1ee2c196a9
+        domain: binary_sensor
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_text.estado_deseable_de_ventanas
+        state: Cerrar Ventanas
+      - type: is_open
+        condition: device
+        device_id: fbc05b6200ed8cef43577618233dea93
+        entity_id: 3072835d2a9d208031a77b1ee2c196a9
+        domain: binary_sensor
+  - condition: template
+    value_template: "{% set ultima = states('input_datetime.ultimo_aviso_de_ventanas')
+      %}\n    {% if ultima == 'unknown' or ultima == 'unavailable' %}\n      true\n
+      \   {% else %}\n      {% set ultima_dt = as_datetime(ultima).astimezone(now().tzinfo)
+      %}\n      {% set tiempo_limite = now() - timedelta(minutes=10) %}\n      {{
+      ultima_dt < tiempo_limite }}\n    {% endif %}"
+  actions:
+  - action: openai_conversation.generate_content
+    metadata: {}
+    data:
+      config_entry: 01JPR92NX8D92W9EA6R8RCD5Y3
+      prompt: "Asumí el rol de Alexa, el asistente virtual de Amazon.\ny di que en
+        virtud de las temperaturas exteriores y exteriores la recomendación es: {{
+        states('input_text.estado_deseable_de_ventanas') }}\nDatos extras sólo para
+        contexto:\nTemp. Exterior: {{ states('sensor.sensor_exterior_temperature')
+        }}\nTemp. Interior: {{ states('sensor.0xa4c1385656504f9f_temperature') }}
+        \nen caso de abrir ventanas si la temperatura exterior es mayor que la interior
+        es para calentar el ambiente/casa. si es al revez es para refrescar el ambiente/casa.\nSé
+        breve pero amistosa.No uses emoticones.\nen caso de cerrar ventanas es para
+        mantener dentro de la casa la temperatura"
+    response_variable: mensaje
+  - action: script.notify_alexa
+    metadata: {}
+    data:
+      devices:
+      - 911dbcab64222c9bca6e2bc31bb5996c
+      type: announce
+      message: '{{mensaje.text}}'
+  - action: input_datetime.set_datetime
+    metadata: {}
+    data:
+      datetime: '{{now()}}'
+    target:
+      entity_id: input_datetime.ultimo_aviso_de_ventanas
+  mode: single
+- id: '1751304955153'
+  alias: Acumulador de tiempo encendido (caldera)
+  description: ''
+  use_blueprint:
+    path: barct/encendido_stats.yaml
+    input:
+      switch: switch.switch_caldera
+      acumulador: input_number.tiempo_de_uso_caldera_corregido
+- id: '1757519518554'
+  alias: Clima – Guardar mínima/máxima diarias (sin CSV)
+  description: ''
+  use_blueprint:
+    path: barct/forecast.yaml
+    input:
+      target_max: input_number.temp_today_max
+      target_min: input_number.temp_today_min

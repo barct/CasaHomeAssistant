@@ -1,0 +1,18 @@
+# Home Assistant sensitive / volatile
+secrets.yaml
+# logs
+home-assistant*.log*
+# databases
+*.db
+*.db-shm
+*.db-wal
+# runtime/state
+.storage/
+.ha_run.lock
+# optional caches/tmp
+tts/
+temp/
+# zigbee2mqtt runtime (can be large/sensitive)
+zigbee2mqtt/database.db*
+zigbee2mqtt/log/
+zigbee2mqtt/state.json

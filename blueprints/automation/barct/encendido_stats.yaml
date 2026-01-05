@@ -1,0 +1,37 @@
+blueprint:
+  name: Acumulador de tiempo encendido (horas, cada minuto)
+  description: >
+    Suma 1 minuto (en horas) al acumulador por cada minuto que el switch esté encendido.
+    Requiere un input_number con unidad h (horas).
+  domain: automation
+  input:
+    switch:
+      name: Switch a monitorear
+      selector:
+        entity:
+          domain: switch
+    acumulador:
+      name: Acumulador (input_number en horas)
+      selector:
+        entity:
+          domain: input_number
+
+trigger:
+  - platform: time_pattern
+    minutes: "/1"  # Ejecuta cada minuto
+
+condition:
+  - condition: state
+    entity_id: !input switch
+    state: "on"
+
+variables:
+  acumulador_entity: !input acumulador
+action:
+  - service: input_number.set_value
+    data:
+      entity_id: !input acumulador
+      value: >
+        {{ states(acumulador_entity) | float + (1 / 60) }}
+
+mode: queued

@@ -1,0 +1,120 @@
+blueprint:
+  name: Clima – Guardar mínima/máxima diarias (sin CSV)
+  description: >
+    Llama weather.get_forecasts (daily) y guarda la máxima y mínima del día elegido
+    en dos helpers input_number. Útil para mostrar en tarjetas o usar en otras automatizaciones.
+  domain: automation
+  input:
+    weather_entity:
+      name: Entidad del clima (weather)
+      description: Entidad weather compatible con get_forecasts
+      selector:
+        entity:
+          domain: weather
+      default: weather.casa_anisacate
+
+    target_max:
+      name: Helper para Máxima (input_number)
+      description: Dónde guardar la temperatura máxima del día
+      selector:
+        entity:
+          domain: input_number
+
+    target_min:
+      name: Helper para Mínima (input_number)
+      description: Dónde guardar la temperatura mínima del día
+      selector:
+        entity:
+          domain: input_number
+
+    run_time:
+      name: Hora diaria de actualización
+      description: Hora local en la que se cargarán los valores
+      default: "00:10:00"
+      selector:
+        time: {}
+
+    run_on_start:
+      name: Ejecutar al iniciar Home Assistant
+      description: También cargar al arrancar (útil si se reinicia)
+      default: true
+      selector:
+        boolean: {}
+
+    day_index:
+      name: Día del pronóstico
+      description: 0 = hoy, 1 = mañana, 2 = pasado…
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 6
+          step: 1
+          mode: slider
+
+mode: single
+max_exceeded: silent
+
+# Variables al nivel superior (se pueden usar en condiciones)
+variables:
+  w: !input weather_entity
+  idx: !input day_index
+  run_on_start_var: !input run_on_start
+
+trigger:
+  - platform: time
+    at: !input run_time
+  - platform: homeassistant
+    event: start
+
+# Si es disparo por hora -> siempre corre.
+# Si es por start -> solo corre si run_on_start=true.
+condition:
+  - condition: or
+    conditions:
+      - condition: template
+        value_template: "{{ trigger.platform == 'time' }}"
+      - condition: template
+        value_template: "{{ trigger.platform == 'homeassistant' and run_on_start_var }}"
+
+action:
+  - service: weather.get_forecasts
+    target:
+      entity_id: !input weather_entity
+    data:
+      type: daily
+    response_variable: fc
+
+  - variables:
+      lista: >
+        {% if fc and w in fc and fc[w] and 'forecast' in fc[w] %}
+          {{ fc[w].forecast }}
+        {% else %}
+          {{ [] }}
+        {% endif %}
+      item: "{{ lista[idx] if lista|length > idx else dict() }}"
+      max_hoy: "{{ item.temperature if 'temperature' in item else none }}"
+      min_hoy: >
+        {% if 'templow' in item %}{{ item.templow }}
+        {% elif 'temperature_low' in item %}{{ item.temperature_low }}
+        {% else %}{{ none }}{% endif %}
+
+  - choose:
+      - conditions: "{{ max_hoy is not none }}"
+        sequence:
+          - service: input_number.set_value
+            target:
+              entity_id: !input target_max
+            data:
+              value: "{{ max_hoy }}"
+    default: []
+
+  - choose:
+      - conditions: "{{ min_hoy is not none }}"
+        sequence:
+          - service: input_number.set_value
+            target:
+              entity_id: !input target_min
+            data:
+              value: "{{ min_hoy }}"
+    default: []

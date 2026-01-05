@@ -1,0 +1,372 @@
+notify_alexa:
+  alias: Notify Alexa
+  use_blueprint:
+    path: TheAppleFreak/notify_alexa.yaml
+  description: ''
+buenas_noches_de_alexa:
+  sequence:
+  - action: openai_conversation.generate_content
+    metadata: {}
+    data:
+      prompt: eres alexa, un asistente de hogar, debes dar las buenas noches de una
+        manera original, no debes usar emoticones.
+      config_entry: 01JPR92NX8D92W9EA6R8RCD5Y3
+    response_variable: mensaje
+  - action: script.notify_alexa
+    metadata: {}
+    data:
+      devices:
+      - 911dbcab64222c9bca6e2bc31bb5996c
+      message: '{{mensaje}}'
+      type: tts
+  alias: Buenas Noches de Alexa
+  description: ''
+bueos_dias_de_alexa:
+  sequence:
+  - action: calendar.get_events
+    metadata: {}
+    data:
+      duration:
+        hours: 24
+        minutes: 0
+        seconds: 0
+    target:
+      entity_id:
+      - calendar.recordatorios_alexa
+      - calendar.actividades_felipe_y_galileo
+    response_variable: agenda
+  - action: openai_conversation.generate_content
+    metadata: {}
+    data:
+      prompt: "Asume el rol de Alexa, el asistente virtual de Amazon. Eres el ayudante
+        personal de una familia de cuatro miembros:\n\nFernando (alias Papá),\nSara
+        (alias Mamá),\nFelipe (alias Feli),\nGalileo (alias Gali).\n\nEsta información
+        es solo para contextualizarte: no es necesario mencionar a cada persona, a
+        menos que ayude a que el mensaje sea más cálido.\n\nTu tarea es dar los buenos
+        días de forma amable, familiar y organizada, incluyendo lo siguiente:\n\nSensación
+        actual (según sensor.casa_anisacate_temperatura):\n\nSi es menor a 10 °C →
+        \"Ahora hace bastante frío afuera\"\n\nSi está entre 10 y 18 °C → \"Ahora
+        está fresco\"\n\nSi supera los 18 °C → \"La mañana está templada\"\n\nRecomendación
+        de abrigo (según sensor.casa_anisacate_maxima_sensacion_real_de_temperatura_dia_0):\n\nSi
+        la máxima es menor a 15 °C → \"Abríguense bien\"\n\nEntre 15 y 22 °C → \"Conviene
+        salir con abrigo liviano\"\n\nMás de 22 °C → \"Hoy no hace falta abrigarse
+        mucho\"\n\nAgenda del día, solo si hay eventos:\n\n{% set eventos = (\n  agenda[\"calendar.recordatorios_alexa\"][\"events\"]\n
+        \ + agenda[\"calendar.actividades_felipe_y_galileo\"][\"events\"]\n) %}\n\n{%
+        if eventos | length > 0 %}\n  {% for event in eventos %}\n    {{ event.start
+        }}: {{ event.summary }}<br>\n  {% endfor %}\n{% endif %}\n\nEl mensaje debe
+        sonar cálido, familiar y positivo, como un saludo de cada mañana. Podés usar
+        frases como “¡Buen día familia!” o “Vamos arrancando el día con…”. No uses
+        emoticones, ni lenguaje técnico o distante."
+      config_entry: 01JPR92NX8D92W9EA6R8RCD5Y3
+    response_variable: mensaje
+  - action: script.notify_alexa
+    metadata: {}
+    data:
+      devices:
+      - 911dbcab64222c9bca6e2bc31bb5996c
+      message: '{{mensaje.text}}'
+      type: tts
+  alias: Buenos días de Alexa
+  description: ''
+secuencia_ir_a_dormir:
+  sequence:
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.cancelar_secuencia
+  - if:
+    - condition: numeric_state
+      entity_id: weather.casa_anisacate_2
+      attribute: temperature
+      below: 16
+    then:
+    - action: climate.turn_on
+      metadata: {}
+      data: {}
+      target:
+        device_id:
+        - d4c1fe0be7300824458a0b368f1dc9fe
+        - fa34b04586026d83f358d65b813a3efb
+        - ca3129f6d632be8537539fb794326438
+    - variables:
+        apagar_calefaccion: true
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0xa4c1389ed679372a
+      - switch.0xa4c1383719d7951f_l1
+  - action: script.notify_alexa
+    metadata: {}
+    data:
+      devices:
+      - 911dbcab64222c9bca6e2bc31bb5996c
+      message: Rutina nocturna activada. Las luces se apagarán en 5 minutos.
+      type: announce
+  - delay:
+      hours: 0
+      minutes: 3
+      seconds: 0
+      milliseconds: 0
+  - condition: state
+    entity_id: input_boolean.cancelar_secuencia
+    state: 'off'
+  - action: script.notify_alexa
+    metadata: {}
+    data:
+      type: announce
+      message: Apagaré las luces en 2 minutos
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.punto_ventana_right
+      - switch.punto_living_center
+      - switch.punto_living_right
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 30
+      milliseconds: 0
+  - action: script.notify_alexa
+    metadata: {}
+    data:
+      devices:
+      - 911dbcab64222c9bca6e2bc31bb5996c
+      type: announce
+      message: Quedan 30 segundos
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - condition: state
+    entity_id: input_boolean.cancelar_secuencia
+    state: 'off'
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.a_dormir
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - if:
+    - condition: template
+      value_template: '{{apagar_calefaccion}}'
+    then:
+    - action: climate.turn_off
+      metadata: {}
+      data: {}
+      target:
+        device_id:
+        - d4c1fe0be7300824458a0b368f1dc9fe
+        - fa34b04586026d83f358d65b813a3efb
+        - ca3129f6d632be8537539fb794326438
+  alias: Secuencia Ir a Dormir
+  description: ''
+abrir_porton:
+  sequence:
+  - condition: state
+    entity_id: cover.garage_door
+    state: closed
+  - data:
+      entity_id: scene.abrir_porton
+    action: scene.turn_on
+  alias: Secuencia para Abrir Portón
+  description: ''
+cerrar_porton:
+  sequence:
+  - condition: state
+    entity_id: binary_sensor.sensor_porton_cerrado_contact
+    state: 'on'
+  - data: {}
+    action: scene.turn_on
+    target:
+      entity_id: scene.abrir_porton
+  alias: Secuencia para Cerrar Portón
+  description: ''
+configurar_rutina_actual:
+  sequence:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.ausente
+        state: 'on'
+      sequence:
+      - action: input_select.select_option
+        metadata: {}
+        data:
+          option: Ausente
+        target:
+          entity_id: input_select.rutina_diaria
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.rutina_hogarena
+        state: 'on'
+      sequence:
+      - action: input_select.select_option
+        metadata: {}
+        data:
+          option: Rutina Hogareña
+        target:
+          entity_id: input_select.rutina_diaria
+    - conditions:
+      - condition: template
+        value_template: '{{ now().weekday() == 5 or now().weekday() == 6}}'
+      sequence:
+      - action: input_select.select_option
+        metadata: {}
+        data:
+          option: Rutina Hogareña
+        target:
+          entity_id: input_select.rutina_diaria
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(''calendar.festivos_en_argentina'', ''on'') and
+          state_attr(''calendar.festivos_en_argentina'', ''all_day'') == true }}'
+      sequence:
+      - action: input_select.select_option
+        metadata: {}
+        data:
+          option: Rutina Hogareña
+        target:
+          entity_id: input_select.rutina_diaria
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.epoca_de_clases
+        state: 'on'
+      sequence:
+      - action: input_select.select_option
+        metadata: {}
+        data:
+          option: Rutina Laboral - Clases
+        target:
+          entity_id: input_select.rutina_diaria
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.epoca_de_clases
+        state: 'off'
+      sequence:
+      - action: input_select.select_option
+        metadata: {}
+        data:
+          option: Rutina Laboral - Sin Clases
+        target:
+          entity_id: input_select.rutina_diaria
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_select.rutina_diaria
+        state: Ausente
+      sequence:
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          timestamp: 0
+        target:
+          entity_id: input_datetime.caldera_hora_encendido
+    - conditions:
+      - condition: state
+        entity_id: input_select.rutina_diaria
+        state: Rutina Hogareña
+      sequence:
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().date() }} 13:00'
+        target:
+          entity_id: input_datetime.caldera_hora_encendido
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().date() }} 22:00'
+        target:
+          entity_id: input_datetime.caldera_hora_apagado
+    - conditions:
+      - condition: state
+        entity_id: input_select.rutina_diaria
+        state: Rutina Laboral - Sin Clases
+      sequence:
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().date() }} 13:00'
+        target:
+          entity_id: input_datetime.caldera_hora_encendido
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().date() }} 22:00'
+        target:
+          entity_id: input_datetime.caldera_hora_apagado
+    - conditions:
+      - condition: state
+        entity_id: input_select.rutina_diaria
+        state: Rutina Laboral - Clases
+      sequence:
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().date() }} 13:00'
+        target:
+          entity_id: input_datetime.caldera_hora_encendido
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().date() }} 20:00'
+        target:
+          entity_id: input_datetime.caldera_hora_apagado
+  alias: Configurar Rutina Actual
+  description: ''
+obtener_eventos_calendario:
+  sequence:
+  - action: calendar.get_events
+    metadata: {}
+    data:
+      start_date_time: '{{ now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+        }}'
+      end_date_time: '{{ now().replace(hour=23, minute=59, second=59, microsecond=0).isoformat()
+        }}'
+    target:
+      entity_id: calendar.recordatorios_alexa
+    response_variable: events
+  alias: Obtener Eventos Calendario
+  description: ''
+test_alexa:
+  sequence:
+  - action: script.notify_alexa
+    metadata: {}
+    data:
+      devices:
+      - 911dbcab64222c9bca6e2bc31bb5996c
+      message: DEBERIAN HACER LA TAREA, NO LES PARECE?
+      type: tts
+  alias: TEST ALEXA
+  description: ''
+test_forecast:
+  sequence:
+  - action: weather.get_forecasts
+    metadata: {}
+    data:
+      type: daily
+    response_variable: forecast
+    target:
+      device_id: 7cb2e44e10485453b11d90408fe8f680
+  alias: Test Forecast
+  description: ''
+prueba_alexa2:
+  sequence:
+  - action: notify.send_message
+    metadata: {}
+    data:
+      message: Hola mundo
+    target:
+      device_id: ef9f6b99b0ee0c89e117aeb40a57760b
+  alias: Prueba alexa2
+  description: ''

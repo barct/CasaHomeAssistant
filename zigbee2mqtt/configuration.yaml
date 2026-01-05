@@ -1,0 +1,93 @@
+version: 4
+homeassistant:
+  enabled: true
+advanced:
+  network_key:
+    - 17
+    - 45
+    - 168
+    - 196
+    - 205
+    - 136
+    - 104
+    - 24
+    - 73
+    - 55
+    - 60
+    - 115
+    - 128
+    - 37
+    - 76
+    - 251
+  pan_id: 29926
+  ext_pan_id:
+    - 1
+    - 138
+    - 27
+    - 72
+    - 115
+    - 231
+    - 112
+    - 133
+mqtt:
+  server: mqtt://core-mosquitto:1883
+  user: addons
+  password: phoo3wohgoxohH1epaeLoog3eepeecuugh4ha3xia4io9thietiech6moo1chiel
+frontend:
+  enabled: true
+  port: 8099
+serial:
+  port: tcp://10.5.8.4:6638
+  adapter: ember
+  baudrate: 115200
+devices:
+  '0x3c2ef5fffe3d81ff':
+    friendly_name: Sensor Temperatura Oficina Superior
+  '0xa4c13867e3c405d1':
+    friendly_name: Punto Ventana
+  '0xa4c138e8b360abb0':
+    friendly_name: Punto Living
+  '0xa4c138c56a7b7890':
+    friendly_name: Punto Puerta Cocina
+  '0xa4c1384817c87608':
+    friendly_name: Punto Puerta Living
+  '0xe0798dfffeb73b00':
+    friendly_name: Swich Fondo
+  '0xa4c138a5cd15be41':
+    friendly_name: Sensor Puerta 1
+  '0xf4b3b1fffef19d3f':
+    friendly_name: Punto Escenas 1
+  '0xa4c138b2a3c6fde5':
+    friendly_name: Switch Mesada
+  '0xa4c1383719d7951f':
+    friendly_name: Switch Pasillo
+  '0xa4c13847b6fada0a':
+    friendly_name: Switch Hab. Padres
+  '0xa4c138a50efeb6f3':
+    friendly_name: Switch Calle
+  '0xa4c1389ed679372a':
+    friendly_name: Switch Leds Cantero
+  '0xa4c13892fa4d84a1':
+    friendly_name: Swich Patio Arbol
+  '0xa4c138a8a0c86aee':
+    friendly_name: 'Punto Cocina Principal '
+  '0x0ceff6fffe16ab0f':
+    friendly_name: Sensor Living
+  '0xa4c1385656504f9f':
+    friendly_name: Sensor Caldera
+  '0xa4c1389fd5ee5879':
+    friendly_name: 'Switch Caldera '
+  '0xa4c13836cd3a3a54':
+    friendly_name: Sensor Portón Cerrado
+  '0x70b3d52b6007db6d':
+    friendly_name: Switch Hab. Felipe
+  '0xa4c138ff1f259623':
+    friendly_name: Medidor General
+  '0x70b3d52b6007d05e':
+    friendly_name: Switch Escalera
+  '0xa4c1387396ee9ac2':
+    friendly_name: Sensor Ventana Living
+  '0xa4c1386e83c14152':
+    friendly_name: Temperatura Caldera Agua
+  '0xa4c138a40ee84f15':
+    friendly_name: Sensor Exterior

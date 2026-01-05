@@ -1,0 +1,107 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+template: !include templates.yaml
+sensor: !include sensors.yaml
+
+homeassistant:
+  auth_mfa_modules:
+    - type: totp
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 127.0.0.1
+
+device_tracker:
+  - platform: snmp
+    host: 10.5.8.251
+    community: public
+    baseoid: 1.3.6.1.4.1.14823.2.3.3.1.2.4.1.1
+
+
+cover:
+  - platform: template
+    covers:
+      garage_door:
+        unique_id: porton_virtual_01
+        device_class: garage
+        friendly_name: "Portón"
+        value_template: >
+          {{ is_state('binary_sensor.0xa4c13836cd3a3a54_contact', 'on') }}
+        open_cover:
+          action: script.abrir_porton
+        close_cover:
+          action: script.cerrar_porton
+          data:
+            entity_id: scene.abrir_porton
+        icon_template: >
+          {% if is_state('binary_sensor.0xa4c13836cd3a3a54_contact', 'on') %}
+            mdi:garage-open
+          {% else %}
+            mdi:garage
+          {% endif %}
+
+alexa:
+  smart_home:
+    locale: es-MX
+    endpoint: https://api.amazonalexa.com/v3/events
+    client_id: !secret alexa_smart_home_client_id
+    client_secret: !secret alexa_smart_home_client_secret
+    filter:
+      include_entities:
+        - scene.a_comer
+        - scene.a_desayunar
+        - scene.soft
+        - script.abrir_porton
+        - script.cerrar_porton
+        - script.secuencia_ir_a_dormir
+        - switch.0xa4c1383719d7951f_l1
+        - switch.0xa4c1383719d7951f_l2
+        - switch.0xa4c13847b6fada0a_l1
+        - switch.0xa4c13847b6fada0a_l2
+        - switch.0xa4c13892fa4d84a1
+        - switch.0xa4c1389ed679372a
+        - switch.0xa4c138a50efeb6f3
+        - switch.0xa4c138a8a0c86aee_center
+        - switch.0xa4c138a8a0c86aee_left
+        - switch.0xa4c138a8a0c86aee_right
+        - switch.0xa4c138b2a3c6fde5
+        - switch.0xe0798dfffeb73b00
+        - switch.switch_hab_felipe_l1
+        - switch.switch_hab_felipe_l2
+        - switch.switch_escalera_l1
+        - switch.switch_escalera_l2
+        - climate.aire_acondicionado
+        - climate.aire_acondicionado_felipe
+        - climate.aire_acondicionado_galileo
+        - climate.midea_ac_150633094300627
+        - sensor.0xa4c1385656504f9f_temperature
+        - binary_sensor.0xa4c13836cd3a3a54_contact
+      include_entity_globs:
+        - switch.punto*
+      exclude_entity_globs:
+        - switch.*backlight*
+  entity_config:
+      binary_sensor.0xa4c13836cd3a3a54_contact:
+        name: Sensor Portón
+        description: Sensor de apertura del portón
+
+utility_meter:
+  consumo_gas_diario:
+    unique_id: "consumo_gas_diario"
+    source: sensor.consumo_de_gas
+    cycle: daily
+
+  consumo_gas_mensual:
+    unique_id: "consumo_gas_mensual"
+    source: sensor.consumo_de_gas
+    cycle: monthly
+
